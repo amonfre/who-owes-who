@@ -1,4 +1,4 @@
-# Test push
+# Test push 1
 num = int(raw_input())
 
 graph = []
