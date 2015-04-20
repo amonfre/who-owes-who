@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-# Test push 2
-=======
->>>>>>> 4f9df18c039e465276498212173237bf9482990f
+
 num = int(raw_input())
 
 graph = []
