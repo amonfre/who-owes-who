@@ -29,16 +29,19 @@ while (len(friendList)) > 0:
  
 print newfriends
 
-for i in range(newfriends[0],newfriends[1]):
-    for j in range(newfriends[1],entries):
-        if Matrix[i][j] < 0 and i > 0:
-            Matrix[newfriends[0]][i] -= Matrix[i][j]
-            Matrix[newfriends[0]][j] += Matrix[i][j]
-            Matrix[i][j] = 0
-        if Matrix[i][j] > 0 and j > newfriends[1] and j < newfriends[2]:
-            Matrix[i][newfriends[1]] += Matrix[i][j]
-            Matrix[newfriends[1]][j] += Matrix[i][j]
-            Matrix[i][j] = 0
+while newfriends[1] != len(Matrix):
+    for i in range(newfriends[0],newfriends[1]):
+        for j in range(newfriends[1],entries):
+            if Matrix[i][j] < 0 and i > 0:
+                Matrix[newfriends[0]][i] -= Matrix[i][j]
+                Matrix[newfriends[0]][j] += Matrix[i][j]
+                Matrix[i][j] = 0
+            if Matrix[i][j] > 0 and j > newfriends[1] and j < newfriends[2]:
+                Matrix[i][newfriends[1]] += Matrix[i][j]
+                Matrix[newfriends[1]][j] += Matrix[i][j]
+                Matrix[i][j] = 0
+    newfriends.pop(0)
+
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in Matrix]))
        
