@@ -1,32 +1,45 @@
 
-num = int(raw_input())
+entries = 6
+friends = 3
 
-graph = []
-friends = []
+Matrix = [[0 for x in range(entries)] for y in range(entries)]
+Matrix [0][1] = -10
+Matrix [0][3] = -10
+Matrix [1][2] = -10
+Matrix [1][3] = -10
+Matrix [1][4] = 10
+Matrix [2][3] = 10
+Matrix [2][5] = -10
+Matrix [3][4] = 10
+Matrix [4][5] = -10
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      for row in Matrix]))
 
-for i in range(num):
-	friend = map(int, raw_input().split())
-	friend.append(i)
-	check_friends = False
-	for j in range(len(friends)):
-		if friend[0] in friends[j]:
-			check_friends = True
-		elif friend[0] == -1:
-			check_friends = True
-	if check_friends == False:
-		friends.append(friend)
-	edges = raw_input().split(" ")
-	edges = dict(map(int, edge.split(",")) for edge in edges)
-	graph.append(edges)
+for i in range(friends):
+    for j in range(friends,entries):
+        if Matrix[i][j] < 0 and i > 0:
+            Matrix[0][i] -= Matrix[i][j]
+            Matrix[0][j] += Matrix[i][j]
+            Matrix[i][j] = 0
+        if Matrix[i][j] > 0 and j > friends:
+            Matrix[i][friends] += Matrix[i][j]
+            Matrix[friends][j] += Matrix[i][j]
+            Matrix[i][j] = 0
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      for row in Matrix]))     
+       
+for i in range(entries):
+    for j in range(i):
+        Matrix[i][j] = -Matrix[j][i]
+   
+networth = [0 for x in range(entries)]  
+for i in range(entries):
+    for j in range(entries):
+        networth[i] += Matrix[i][j]
 
-print graph
-print friends
-
-networth = [0 for x in range(num)]
-for i in range(len(friends)):
-	for friend in friends[i]:
-		for node in graph[friend]:
-			networth[friend] -= graph[friend][node]
-			networth[node] += graph[friend][node]
-
+Transactions = -1
+for i in range(entries):
+    if networth[i] != 0:
+        Transactions += 1
 print networth
+print Transactions
