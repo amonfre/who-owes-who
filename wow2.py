@@ -125,19 +125,25 @@ while newfriends_copy[0] != len(networth):
     newfriends_copy.pop(0)
 listCounter = 0 
 indexCounter = 0
+#print new_networth
+
 while listCounter < len(new_networth):
     listLen = len(new_networth[listCounter])
+    #print listLen
     while listLen > 1:
-        maxIndex = new_networth[listCounter].index(max(new_networth[listCounter]))
+        maxVal = max(value for value in new_networth[listCounter] if value is not 0)
+        maxIndex = new_networth[listCounter].index(maxVal)
         minVal = min(value for value in new_networth[listCounter] if value is not 0)
         minIndex = new_networth[listCounter].index(minVal)
         new_networth[listCounter][maxIndex] += new_networth[listCounter][minIndex]
         finalMatrix[indexCounter+minIndex][indexCounter+maxIndex] += new_networth[listCounter][minIndex]
         new_networth[listCounter][minIndex] = 0
         listLen -= 1 
+        #print listLen
+        #print new_networth
     indexCounter += len(new_networth[listCounter])
     listCounter += 1
-#print new_networth
+    #print new_networth
 '''print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in finalMatrix]))'''
 listCounter = 0
@@ -162,6 +168,7 @@ while listCounter2 < (len(new_networth)):
     listCounter += 1
     listCounter2 += 1
     indexCounter += 1
+#print new_networth
 print "Optimal Matrix"
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in finalMatrix]))
