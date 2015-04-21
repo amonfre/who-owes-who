@@ -40,7 +40,7 @@ print "Original Matrix"
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in Matrix]))
 #print('\n')
-#print friends
+print friends
 
 #Create list for friend grou connections
 friendList = [0 for x in range(entries)]
@@ -64,7 +64,7 @@ while (len(friendList)) > 0:
     newfriends.append(counter1)
 newfriends_copy = copy.deepcopy(newfriends)
 newfriends_copy2 = copy.deepcopy(newfriends)
-#print newfriends
+print newfriends
 #Re-calculate the matrix to fit structure used in below algorithm
 for i in range(entries):
     for j in range(i):
@@ -125,12 +125,14 @@ while newfriends_copy[0] != len(networth):
     newfriends_copy.pop(0)
 listCounter = 0 
 indexCounter = 0
-#print new_networth
+print new_networth
 
 while listCounter < len(new_networth):
     listLen = len(new_networth[listCounter])
     #print listLen
     while listLen > 1:
+        if all(x==0 for x in new_networth[listCounter]):
+            listCounter += 1
         maxVal = max(value for value in new_networth[listCounter] if value is not 0)
         maxIndex = new_networth[listCounter].index(maxVal)
         minVal = min(value for value in new_networth[listCounter] if value is not 0)
@@ -149,7 +151,13 @@ while listCounter < len(new_networth):
 listCounter = 0
 listCounter2 = 1
 indexCounter = 0
+#print new_networth
 while listCounter2 < (len(new_networth)):
+    if all(x==0 for x in new_networth[listCounter]):
+        listCounter += 1
+        listCounter2 += 1
+    elif all(x==0 for x in new_networth[listCounter2]):
+        listCounter2 += 1
     firstVal = min(value for value in new_networth[listCounter] if value is not 0)
     firstIndex = new_networth[listCounter].index(firstVal)
     secVal = min(value for value in new_networth[listCounter2] if value is not 0)
@@ -165,6 +173,7 @@ while listCounter2 < (len(new_networth)):
         new_networth[listCounter2][secIndex] = 0
         listCounter -= 1
     #print new_networth
+    #print listCounter2
     listCounter += 1
     listCounter2 += 1
     indexCounter += 1
