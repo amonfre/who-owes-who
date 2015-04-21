@@ -108,15 +108,12 @@ Transactions = -1
 for i in range(entries):
     if networth[i] != 0:
         Transactions += 1
-#print Transactions
-
-max_val = 0
-min_val = 0
-
+        
 finalMatrix = [[0 for x in range(entries)] for y in range(entries)]
 
 new_networth = []
 
+#Create networth Matrix
 while newfriends_copy[0] != len(networth):
     hold_list = []
     for i in range(newfriends_copy[0], newfriends_copy[1]):
@@ -127,9 +124,9 @@ listCounter = 0
 indexCounter = 0
 print new_networth
 
+#Resolve the optimal payment method within each friend group
 while listCounter < len(new_networth):
     listLen = len(new_networth[listCounter])
-    #print listLen
     while listLen > 1:
         if all(x==0 for x in new_networth[listCounter]):
             listCounter += 1
@@ -137,21 +134,22 @@ while listCounter < len(new_networth):
         maxIndex = new_networth[listCounter].index(maxVal)
         minVal = min(value for value in new_networth[listCounter] if value is not 0)
         minIndex = new_networth[listCounter].index(minVal)
-        new_networth[listCounter][maxIndex] += new_networth[listCounter][minIndex]
-        finalMatrix[indexCounter+minIndex][indexCounter+maxIndex] += new_networth[listCounter][minIndex]
-        new_networth[listCounter][minIndex] = 0
+        if maxIndex != minIndex:
+            new_networth[listCounter][maxIndex] += new_networth[listCounter][minIndex]
+            finalMatrix[indexCounter+minIndex][indexCounter+maxIndex] += new_networth[listCounter][minIndex]
+            new_networth[listCounter][minIndex] = 0
         listLen -= 1 
-        #print listLen
-        #print new_networth
     indexCounter += len(new_networth[listCounter])
     listCounter += 1
-    #print new_networth
-'''print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in finalMatrix]))'''
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      for row in finalMatrix]))
+print('\n')
 listCounter = 0
 listCounter2 = 1
 indexCounter = 0
-#print new_networth
+
+#Resolve the optimal payment method between friend groups and compute 
+#the optimal Matrix to represnt the solution
 while listCounter2 < (len(new_networth)):
     if all(x==0 for x in new_networth[listCounter]):
         listCounter += 1
@@ -172,12 +170,10 @@ while listCounter2 < (len(new_networth)):
         finalMatrix[newfriends_copy2[listCounter2]+secIndex][newfriends_copy2[listCounter]+firstIndex] += secVal
         new_networth[listCounter2][secIndex] = 0
         listCounter -= 1
-    #print new_networth
-    #print listCounter2
     listCounter += 1
     listCounter2 += 1
     indexCounter += 1
-#print new_networth
+#Display the optimal Matrix
 print "Optimal Matrix"
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in finalMatrix]))
