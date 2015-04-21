@@ -36,9 +36,9 @@ for i in range(entries):
 		edge_value = map(int, edge.split(","))
 		if edge_value[0] != -1:
 			Matrix[i][edge_value[0]] = edge_value[1]
-
-'''print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in Matrix]))'''
+print "Original Matrix"
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      for row in Matrix]))
 #print('\n')
 #print friends
 
@@ -72,9 +72,9 @@ for i in range(entries):
             Matrix[j][i] = -Matrix[i][j]
             Matrix[i][j] = 0
             
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+'''print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in Matrix]))         
-print('\n')
+print('\n')'''
 
 #Re-calculate the matrix to minimize payments between friend groups
 while newfriends[1] != len(Matrix):
@@ -90,8 +90,8 @@ while newfriends[1] != len(Matrix):
                 Matrix[i][j] = 0
     newfriends.pop(0)
 
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in Matrix]))
+'''print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      for row in Matrix]))'''
        
 for i in range(entries):
     for j in range(i):
@@ -108,8 +108,7 @@ Transactions = -1
 for i in range(entries):
     if networth[i] != 0:
         Transactions += 1
-print networth
-print Transactions
+#print Transactions
 
 max_val = 0
 min_val = 0
@@ -138,7 +137,7 @@ while listCounter < len(new_networth):
         listLen -= 1 
     indexCounter += len(new_networth[listCounter])
     listCounter += 1
-print new_networth
+#print new_networth
 '''print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in finalMatrix]))'''
 listCounter = 0
@@ -159,10 +158,10 @@ while listCounter2 < (len(new_networth)):
         finalMatrix[newfriends_copy2[listCounter2]+secIndex][newfriends_copy2[listCounter]+firstIndex] += secVal
         new_networth[listCounter2][secIndex] = 0
         listCounter -= 1
-    print new_networth
+    #print new_networth
     listCounter += 1
     listCounter2 += 1
     indexCounter += 1
-
+print "Optimal Matrix"
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in finalMatrix]))
