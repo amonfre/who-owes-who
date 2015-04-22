@@ -9,11 +9,10 @@ cur_per = 0
 for i in range(entries):
 	friend = map(int, raw_input().split())
 	friend.append(i)
-	print friend
+	#print friend
 	for j in range(len(friend)):
 	    if friend[j] == cur_per:
 	        friend.pop(j)
-	        print j
 	    elif friend[j] == -1:
 	        friend = []
 	        break
@@ -91,18 +90,48 @@ for i in range(len(Matrix)):
         else:
             New_Matrix[i][j] += Matrix[i][j]
             
+       
 print 'Original Matrix'    
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in Matrix]))     
 print 'New Matrix'    
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in New_Matrix]))
-#Find remaining paayments outside of friend groups   
+print('\n')
+#Find remaining paayments outside of friend groups  
 for i in range(len(Matrix)):
     for j in range(len(Matrix)):
-        if New_Matrix[i][j] == 0 and Matrix[i][j] != New_Matrix[i][j]:
-            New_Matrix[i][j] = -1
-            
+        if New_Matrix[i][j] == 0 and Matrix[i][j] != New_Matrix[i][j]:           
+            for n in range(len(friends[i])):
+                #Does a friend owe the same person outside the group
+                if Matrix[friends[i][n]][j] != 0:
+                    New_Matrix[i][j] += Matrix[i][j] + Matrix[friends[i][n]][j]
+                    New_Matrix[friends[i][n]][i] += Matrix[friends[i][n]][j]
+                    Matrix[friends[i][n]][j] = 0
+print 'New Matrix'    
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      for row in New_Matrix]))
+print('\n')
+print 'Matrix'    
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      for row in Matrix]))
+print('\n')
+count = 0
+for i in range(len(Matrix)):
+    for j in range(len(Matrix)):
+        if New_Matrix[i][j] == 0 and Matrix[i][j] != New_Matrix[i][j]:           
+            #New_Matrix[i][j] = -1
+            for n in range(len(friends[i])):
+                count = 0
+                for m in range(len(Matrix)):
+                #Does a friend owe someone in the same unconnected friend group 
+                    if Matrix[friends[i][n]][m] != 0 and m in friends[j]:
+                        New_Matrix[i][j] += Matrix[i][j] + Matrix[friends[i][n]][m]
+                        New_Matrix[friends[i][n]][i] += Matrix[friends[i][n]][m]
+                        Matrix[friends[i][n]][m] = 0
+                        count = 1
+                if count != 1:
+                    New_Matrix[i][j] += Matrix[i][j]
 print 'New Matrix'    
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in New_Matrix]))
