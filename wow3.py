@@ -89,15 +89,16 @@ for i in range(len(Matrix)):
                                     Matrix[i][j] = 0
         else:
             New_Matrix[i][j] += Matrix[i][j]
+            Matrix[i][j] = 0
             
        
-print 'Original Matrix'    
+'''print 'Original Matrix'    
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in Matrix]))     
 print 'New Matrix'    
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in New_Matrix]))
-print('\n')
+print('\n')'''
 #Find remaining paayments outside of friend groups  
 for i in range(len(Matrix)):
     for j in range(len(Matrix)):
@@ -116,9 +117,23 @@ print 'Matrix'
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in Matrix]))
 print('\n')
+
+#Filter Matrix
+for i in range(len(Matrix)):
+    for j in range(len(Matrix)):
+        if New_Matrix[i][j] != 0 and New_Matrix[j][i] != 0:
+            New_Matrix[i][j] -= New_Matrix[j][i]
+            New_Matrix[j][i] = 0
+
+print 'New Matrix'    
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      for row in New_Matrix]))
+print('\n')
+
 count = 0
 for i in range(len(Matrix)):
     for j in range(len(Matrix)):
+        #if Matrix[i][j] != New_Matrix[i][j]:
         if New_Matrix[i][j] == 0 and Matrix[i][j] != New_Matrix[i][j]:           
             #New_Matrix[i][j] = -1
             for n in range(len(friends[i])):
@@ -130,9 +145,51 @@ for i in range(len(Matrix)):
                         New_Matrix[friends[i][n]][i] += Matrix[friends[i][n]][m]
                         Matrix[friends[i][n]][m] = 0
                         count = 1
-                if count != 1:
-                    New_Matrix[i][j] += Matrix[i][j]
+            if count != 1:
+                New_Matrix[i][j] += Matrix[i][j]
 print 'New Matrix'    
 print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
       for row in New_Matrix]))
-          
+      
+#Filter Matrix
+for i in range(len(Matrix)):
+    for j in range(len(Matrix)):
+        if New_Matrix[i][j] != 0 and New_Matrix[j][i] != 0:
+            New_Matrix[i][j] -= New_Matrix[j][i]
+            New_Matrix[j][i] = 0
+
+      
+Worth_Matrix = [[0 for x in range(entries)] for y in range(entries)]
+for i in range(len(New_Matrix)):
+    for j in range(len(New_Matrix)):
+        if  New_Matrix[i][j] > 0:
+            Worth_Matrix[i][j] = New_Matrix[i][j]
+            Worth_Matrix[j][i] = -New_Matrix[i][j]
+'''print 'Worth Matrix'    
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+                for row in Worth_Matrix]))'''
+#Calculate the networth of each individual
+networth = [0 for x in range(entries)]  
+for i in range(entries):
+    for j in range(entries):
+        networth[i] += Worth_Matrix[i][j]
+
+#Determine the minimum number of transactions
+Transactions = 0
+networth_copy = copy.deepcopy(networth)
+c = 0
+while c < len(networth_copy):
+    if networth_copy[c] != 0:
+        d = c + 1
+        while d < len(networth_copy):
+            if networth_copy[c] == -networth_copy[d]:
+                networth_copy.pop(d)
+                Transactions -= 1
+            d += 1
+        Transactions += 1
+    c += 1
+print networth
+print 'Min Transactions'
+print Transactions
+print friends
+
