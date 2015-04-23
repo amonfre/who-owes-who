@@ -30,13 +30,6 @@ for i in range(num):
 	        break
 	cur_per += 1
 	friends.append(friend)
-	'''check_friends = False
-	if len(friend) == 1:
-		check_friends = True
-	elif friend in friends:
-		check_friends = True	
-	if check_friends == False:
-		friends.append(friend)'''
 	#build graph of transactions
 	edges = people[i].payments
 	for edge in edges:
@@ -44,41 +37,9 @@ for i in range(num):
 
 #print "original graph:"
 #print Matrix
-
-#initialize new graph for optimization
-#new_graph = copy.deepcopy(graph)
-'''
-import copy
-entries = int(raw_input())
-num = entries
-
-Matrix = [[0 for x in range(num)] for y in range(num)]
-friends = []
-
-#Create orginal payment Matrix
-#Create the original friend Matrix
-cur_per = 0
-for i in range(num):
-	friend = map(int, raw_input().split())
-	friend.append(i)
-	#print friend
-	for j in range(len(friend)):
-	    if friend[j] == cur_per:
-	        friend.pop(j)
-	    elif friend[j] == -1:
-	        friend = []
-	        break
-	cur_per += 1
-	friends.append(friend)
-	edges = raw_input().split(" ")
-	for edge in edges:
-		edge_value = map(int, edge.split(","))
-		if edge_value[0] != -1:
-			Matrix[i][edge_value[0]] = edge_value[1]
-#print "Original Matrix"
-#print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      #for row in Matrix]))
-'''
+'''print 'Matrix'    
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+    for row in Matrix]))'''
 count = 0
 Worth_Matrix = [[0 for x in range(num)] for y in range(num)]
 for i in range(len(Matrix)):
@@ -117,10 +78,7 @@ while listCounter1 < len(networth):
             networth[listCounter2] = 0
         listCounter2 += 1
     listCounter1 += 1
-'''print 'New Matrix'    
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-    for row in Matrix]))
-print networth'''
+
 #Resolve all other networths
 breaker = 0
 if all(x==0 for x in networth):
@@ -140,7 +98,10 @@ while breaker != 1:
         networth[maxIndex] = 0
     if all(x==0 for x in networth):
         breaker = 1
-
+'''print 'New Matrix'    
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+    for row in Matrix]))
+print networth'''
 #Once we have compute an optimized solution, we want to have this solution be 
 #compatible with our friend group constraints. That is, we have already
 #minimized the total number of payments, but we now want to make sure that these
