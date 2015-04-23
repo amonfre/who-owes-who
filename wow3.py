@@ -1,4 +1,4 @@
-'''import copy
+import copy
 
 #define class of people for input
 class Person:
@@ -13,43 +13,52 @@ people = input()
 num = len(people)
 
 #build empty transaction graph
-graph = [[0 for x in range(num)] for y in range(num)]
+Matrix = [[0 for x in range(num)] for y in range(num)]
 #empty list of friend groups
 friends = []
 
 #build list of friend groups
+cur_per = 0
 for i in range(num):
-	friend = set(people[i].friends)
-	friend.add(i)
-	check_friends = False
+	friend = people[i].friends
+	friend.append(i)
+	for j in range(len(friend)):
+	    if friend[j] == cur_per:
+	        friend.pop(j)
+	    elif friend[j] == -1:
+	        friend = []
+	        break
+	cur_per += 1
+	friends.append(friend)
+	'''check_friends = False
 	if len(friend) == 1:
 		check_friends = True
 	elif friend in friends:
 		check_friends = True	
 	if check_friends == False:
-		friends.append(friend)
-
+		friends.append(friend)'''
 	#build graph of transactions
 	edges = people[i].payments
 	for edge in edges:
-		graph[i][edge[0]] = edge[1]
+		Matrix[i][edge[0]] = edge[1]
 
-print "original graph:"
-print graph
+#print "original graph:"
+#print Matrix
 
 #initialize new graph for optimization
-new_graph = copy.deepcopy(graph)
+#new_graph = copy.deepcopy(graph)
 '''
 import copy
 entries = int(raw_input())
+num = entries
 
-Matrix = [[0 for x in range(entries)] for y in range(entries)]
+Matrix = [[0 for x in range(num)] for y in range(num)]
 friends = []
 
 #Create orginal payment Matrix
 #Create the original friend Matrix
 cur_per = 0
-for i in range(entries):
+for i in range(num):
 	friend = map(int, raw_input().split())
 	friend.append(i)
 	#print friend
@@ -66,36 +75,85 @@ for i in range(entries):
 		edge_value = map(int, edge.split(","))
 		if edge_value[0] != -1:
 			Matrix[i][edge_value[0]] = edge_value[1]
-print "Original Matrix"
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in Matrix]))
-#print('\n')
-print friends
-
+#print "Original Matrix"
+#print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      #for row in Matrix]))
+'''
 count = 0
-Worth_Matrix = [[0 for x in range(entries)] for y in range(entries)]
+Worth_Matrix = [[0 for x in range(num)] for y in range(num)]
 for i in range(len(Matrix)):
     for j in range(len(Matrix)):
         if  Matrix[i][j] != 0:
             count += 1
             Worth_Matrix[i][j] += Matrix[i][j]
             Worth_Matrix[j][i] += -Matrix[i][j]
-            '''print 'Worth Matrix'    
-            print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                for row in Worth_Matrix]))'''
 #Calculate the networth of each individual
-print 'Transactions'
-print count
+#print 'Transactions'
+#print count
 
-networth = [0 for x in range(entries)]  
-for i in range(entries):
-    for j in range(entries):
+networth = [0 for x in range(num)]  
+for i in range(num):
+    for j in range(num):
         networth[i] += Worth_Matrix[i][j]
-print networth       
-        
+#print networth       
+    
+#Refine the matrix to find one of the optimal solutions (There could be multiple)
+#We do this before we account for friend groups to attempt to decrease the total 
+#amount of payments
+
+Matrix = [[0 for x in range(num)] for y in range(num)]
+listCounter1 = 0
+listCounter2 = 1
+#Find any networths that sum to 0 in the list
+while listCounter1 < len(networth):
+    listCounter2 = 0
+    while listCounter2 < len(networth):
+        if networth[listCounter1] == -networth[listCounter2] and networth[listCounter1] != 0:
+            if networth[listCounter1] > 0:
+                Matrix[listCounter1][listCounter2] = networth[listCounter1]
+            else:
+                Matrix[listCounter2][listCounter1] = networth[listCounter2]
+            networth[listCounter1] = 0
+            networth[listCounter2] = 0
+        listCounter2 += 1
+    listCounter1 += 1
+'''print 'New Matrix'    
+print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+    for row in Matrix]))
+print networth'''
+#Resolve all other networths
+breaker = 0
+if all(x==0 for x in networth):
+    breaker = 1
+while breaker != 1:
+    maxVal = max(value for value in networth if value is not 0)
+    maxIndex = networth.index(maxVal)
+    minVal = min(value for value in networth if value is not 0)
+    minIndex = networth.index(minVal)
+    if maxVal > -minVal:
+        Matrix[maxIndex][minIndex] = -minVal 
+        networth[maxIndex] += networth[minIndex]
+        networth[minIndex] = 0
+    else:
+        Matrix[maxIndex][minIndex] = maxVal
+        networth[minIndex] += networth[maxIndex]
+        networth[maxIndex] = 0
+    if all(x==0 for x in networth):
+        breaker = 1
+
+#Once we have compute an optimized solution, we want to have this solution be 
+#compatible with our friend group constraints. That is, we have already
+#minimized the total number of payments, but we now want to make sure that these
+#payments are made within the closest trusted group, if this is possible.
 
 #Refine the Matrix to redirect payments through a friend "channel"
-New_Matrix = [[0 for x in range(entries)] for y in range(entries)]
+#This function looks at payments of an individual outside of their friend group.
+#It then finds, if it exists within four itterations, a friend "channel" to flow
+#the payment through, so that we always have a friend to friend transaction.
+#Four iterations was chosen simply because we felt this was the maximum 
+#number of additional transactions tollerable for the tradeoff of better trusted
+#transactions
+New_Matrix = [[0 for x in range(num)] for y in range(num)]
 x = 0
 for i in range(len(Matrix)):
     for j in range(len(Matrix)):
@@ -158,12 +216,10 @@ for i in range(len(Matrix)):
         else:
             New_Matrix[i][j] += Matrix[i][j]
             Matrix[i][j] = 0
-                
-'''print 'New friends only Matrix'    
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in New_Matrix]))
-print('\n')'''
-#Find remaining payments outside of friend groups  
+             
+#Find remaining payments outside of friend groups 
+#This function aims to see if any two individuals within a friend group owes the
+#same individual outside the group, and resolves the payment matrix accordingly 
 for i in range(len(Matrix)):
     for j in range(len(Matrix)):
         if New_Matrix[i][j] == 0 and Matrix[i][j] != New_Matrix[i][j]:           
@@ -175,15 +231,8 @@ for i in range(len(Matrix)):
                     Matrix[friends[i][n]][j] = 0
                     Matrix[i][j] = 0
 
-'''print 'New Matrix'    
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in New_Matrix]))
-print('\n')
-print 'Matrix'    
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in Matrix]))
-print('\n')'''
-
+#This function simply filters the matrix to take into account when two people 
+#owe one another, simplifying two payments into one.
 #Filter Matrix
 for i in range(len(Matrix)):
     for j in range(len(Matrix)):
@@ -191,17 +240,13 @@ for i in range(len(Matrix)):
             New_Matrix[i][j] -= New_Matrix[j][i]
             New_Matrix[j][i] = 0
 
-'''print 'New Matrix'    
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in New_Matrix]))
-print('\n')'''
-
+#If we can initially find someone else in the friend group who owes someone else
+#in the same non-conected friend groupwe want to combine these payments
 count = 0
 for i in range(len(Matrix)):
     for j in range(len(Matrix)):
         #if Matrix[i][j] != New_Matrix[i][j]:
         if New_Matrix[i][j] == 0 and Matrix[i][j] != New_Matrix[i][j]:           
-            #New_Matrix[i][j] = -1
             for n in range(len(friends[i])):
                 count = 0
                 for m in range(len(Matrix)):
@@ -237,7 +282,7 @@ for i in range(len(Matrix)):
 #what values we have previously added in order to get the previous algorithm to 
 #function properly
 #Iterate over new Matrix to filter all aditional friend group-friend group 
-#transactions
+#transactions and resolve them if possible
                     
 for i in range(len(New_Matrix)):
     for j in range(len(New_Matrix)):
@@ -259,11 +304,13 @@ for i in range(len(New_Matrix)):
                     New_Matrix[friends[i][k]][i] += New_Matrix[friends[i][k]][j]
                     New_Matrix[friends[i][k]][j] = 0
 
-print 'New Matrix'    
-print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-      for row in New_Matrix]))
-      
-Worth_Matrix = [[0 for x in range(entries)] for y in range(entries)]
+#print 'New Matrix'    
+#print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+      #for row in New_Matrix]))
+
+#Finally, calculate the new networth of each individual and the total number of
+#transactions necessary     
+Worth_Matrix = [[0 for x in range(num)] for y in range(num)]
 count = 0
 for i in range(len(New_Matrix)):
     for j in range(len(New_Matrix)):
@@ -271,46 +318,13 @@ for i in range(len(New_Matrix)):
             count += 1
             Worth_Matrix[i][j] += New_Matrix[i][j]
             Worth_Matrix[j][i] += -New_Matrix[i][j]
-            '''print 'Worth Matrix'    
-            print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                for row in Worth_Matrix]))'''
-print 'Transactions'
-print count
+
 #Calculate the networth of each individual
-networth = [0 for x in range(entries)]  
-for i in range(entries):
-    for j in range(entries):
+networth = [0 for x in range(num)]  
+for i in range(num):
+    for j in range(num):
         networth[i] += Worth_Matrix[i][j]
 
-#Determine the minimum number of transactions
-'''Transactions = 0
-networth_copy = copy.deepcopy(networth)
-c = 0
-while c < len(networth_copy):
-    if networth_copy[c] != 0:
-        d = c + 1
-        while d < len(networth_copy):
-            if networth_copy[c] == -networth_copy[d]:
-                networth_copy.pop(d)
-                Transactions -= 1
-            d += 1
-        Transactions += 1
-    c += 1'''
 Transactions = len(networth) - 1
-print networth
-#print 'Max Transactions'
-#print Transactions
-print friends
-
-#print 'Final Matrix'    
-'''print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
-                for row in Matrix]))'''
-'''#Find friend groups whose networth is 0
-for i in range(len(friends)):
-    worth = networth[i]
-    for j in range(len(friends[i])):
-        worth += networth[friends[i][j]]
-    if worth == 0:
-        print i'''
-    
-
+#print 'Transactions'
+#print count
