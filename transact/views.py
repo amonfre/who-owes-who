@@ -44,7 +44,7 @@ def visualize_json(request):
   for user in users:
     nodes.append({"name":user.username})
     for trans in Transaction.objects.filter(sender = user):
-      links.append({"source":uids.index(trans.sender.id), "target":uids.index(trans.recepient.id)})
+      links.append({"source":uids.index(trans.sender.id), "target":uids.index(trans.recipient.id)})
     
   return JsonResponse({"nodes":nodes,"links":links})
   
