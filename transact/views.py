@@ -22,9 +22,11 @@ def new_transaction(request):
     # create a form instance and populate it with data from the request:
     form = TransactionForm(request.POST)
     # check whether it's valid:
+
     if form.is_valid():
       trans = form.save(commit = False)
       trans.created_at = timezone.now()
+      #trans.sender = request.user.username
       trans.save()
       form.save_m2m()
       return HttpResponseRedirect('/transact/')

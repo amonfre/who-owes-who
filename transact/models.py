@@ -15,13 +15,15 @@ class BaseModel(models.Model):
 class Transaction(BaseModel):
    created_at = models.DateField()
    #recepient = models.ForeignKey(User, related_name='recepient')
-   recipient = models.CharField(max_length=100)
-   sender = models.ForeignKey(User,related_name='sender')
+   recipient = models.CharField(max_length=100, default='')
+   sender = models.ForeignKey(User, related_name='sender')
    amount = models.FloatField()
+   pay = models.BooleanField(default=False)
    
 class TransactionForm(ModelForm):
     class Meta:
         model = Transaction
-        fields = ['recipient', 'sender', 'amount']
+        exclude = ['sender']
+        fields = ['recipient', 'amount', 'pay']
         
     

@@ -5,5 +5,4 @@ class TransactionAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Transaction, TransactionAdmin)
 
-
 # Register your models here.
