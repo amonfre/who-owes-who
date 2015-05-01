@@ -1,0 +1,17 @@
+{% extends "basetrans.html" %}
+{% load myfilters %}
+
+{% block title %} Control {% endblock %}
+
+{% block maincontent %}
+	<div style = "padding-top:30px">
+    	<button type="button" class="btn btn-default" onclick ="document.location.href = '/transact/analyze_greedy'">Analyze Greedy</button>
+    	<button type="button" class="btn btn-default" onclick ="document.location.href = '/transact/analyze_friendly'">Analyze Friendly</button>
+    	<button type="button" class="btn btn-default" onclick ="document.location.href = '/transact/clean'">Reset</button>
+    	<button type="button" class="btn btn-default" onclick ="document.location.href = '/transact/smallCreateTransactions'">Simplest Example</button>
+    	<button type="button" class="btn btn-default" onclick ="document.location.href = '/transact/createSampleTransactions'">Random Example</button>
+    	<button type="button" class="btn btn-default" onclick ="document.location.href = '/transact/createGroups'">Friend Group Example</button>
+
+
+    </div>
+{% endblock %}

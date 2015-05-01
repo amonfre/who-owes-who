@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %} Transact {% endblock %}
+{% block content %}
+<form action="{{ action }}" method="POST">
+  {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ form.lob.errors }}
+        <label for="id_lob"></label>
+        {{ form.lob }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.message.errors }}
+        <label for="id_amount">Your message:</label>
+        {{ form.amount }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.name.errors }}
+        <label for="id_name">Friend:</label>
+        {{ form.name }}
+    </div>
+
+
+  <input type="submit" value="Save" />
+</form>
+{% endblock %}
