@@ -27,6 +27,7 @@ def new_transaction(request):
       trans = form.save(commit = False)
       trans.created_at = timezone.now()
       #trans.sender = request.user.username
+      trans.full_clean()
       trans.save()
       form.save_m2m()
       return HttpResponseRedirect('/transact/')
