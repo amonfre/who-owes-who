@@ -34,6 +34,7 @@ for i in range(num):
 	for edge in edges:
 		graph[i][edge[0]] = edge[1]
 
+print "friends:", friends
 print "original graph:"
 print graph
 
@@ -68,6 +69,8 @@ def make_payment(graph, networth, networth_dict, payer_index, receiver_index, pa
 	else:
 		networth[receiver_index] -= payment
 		networth_dict[receiver_index] = (networth[receiver_index], receiver)
+
+	print "person", payer, "pays person", receiver, "an amount of", payment
 	return
 
 #update the graph for each unique friend group
@@ -97,6 +100,7 @@ for i in range(groups):
 		#reorder the networths on each run of the loop
 		ordered_networths = sorted(ordered_networths)
 		ordered_networths_indexes = sorted(ordered_networths_indexes)
+		print "networths:", ordered_networths_indexes
 
 		#if amount owed is larger than amount required for any one person, find if any perfect matches exist
 		#otherwise, simply match largest amount owed to largest amount required
