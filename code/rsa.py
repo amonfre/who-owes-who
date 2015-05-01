@@ -1,4 +1,4 @@
-''' Implementation of RSA cryptosystem
+''' A simple implementation of RSA cryptosystem
 
 Usage:
     
