@@ -1,1 +1,33 @@
 {% extends "basetrans.html" %}
+{% load myfilters %}
+
+{% block title %} Home {% endblock %}
+{% block maincontent %}
+
+<h1> Your networth is: {{networth}} </h1>
+
+{% if networth > 0 %}
+	These people owe you money.
+{% elif networth < 0 %}
+	You owe these people money.
+{% else %}
+	Make some transactions.
+{% endif %}
+  {% if networth != 0 %}
+  <table class = "table">
+    <tr>
+      <th>From</th>
+      <th>To</th>
+      <th>Amount</th>
+    </tr>
+    {% for trans in computations %}
+      <tr>
+      	<td><span class="pop" data-toggle="popover" data-trigger="hover" title="{{ trans.sender.username }}" data-content= "{{trans.sender.username}}">{{ trans.sender.username }}</span></td>
+      	      	<td><span class="pop" data-toggle="popover" data-trigger="hover" title="{{ trans.recepient.username }}" data-content= "{{trans.recepient.username}}">{{ trans.recepient.username }}</span></td>
+
+      	<td>{{trans.amount}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+{% endblock %}

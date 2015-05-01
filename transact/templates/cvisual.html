@@ -7,8 +7,31 @@
 {% endblock %}
 {% block maincontent %}
 <script>
-
-/*code hacked together from a variety of tutorials and the d3 docs */
+/*d3.json("visualjson", function(error, graph) {
+console.log(graph.nodes);
+console.log(graph.links);
+var vis = d3.select("body")
+            .append("svg");
+     var w = 200,
+         h = 200;
+     vis.attr("width", w)
+        .attr("height", h);
+     vis.text("Our Graph")
+        .select("#graph");
+     var force = d3.layout.force()
+    .nodes(graph.nodes)
+    .links(graph.links)
+    .size([w, h])
+    .linkStrength(0.1)
+    .friction(0.9)
+    .linkDistance(20)
+    .charge(-30)
+    .gravity(0.1)
+    .theta(0.8)
+    .alpha(0.1)
+    .start();
+    
+});*/
 
 var width = 900,
     height = 500;
@@ -24,7 +47,7 @@ var svg = d3.select("#content").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-d3.json("visualjson", function(error, graph) {
+d3.json("cvisualjson", function(error, graph) {
   force
       .nodes(graph.nodes)
       .links(graph.links)
